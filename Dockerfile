@@ -37,7 +37,7 @@ RUN mkdir -p /var/ompl \
     && ./install-ompl-ubuntu.sh \
     && rm -rf /var/ompl
 
-# Install ROS2 Jazzy
+# Install ROS2 Humble
 RUN locale-gen en_US en_US.UTF-8 \
     && update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8 
     
@@ -47,11 +47,6 @@ RUN add-apt-repository universe \
     && apt-get update && apt-get install -y \ 
     ros-dev-tools \
     ros-humble-desktop
-
-# Create a non-root user with sudo privileges
-# RUN adduser --disabled-password --gecos "" farmlab \
-#     && usermod -aG sudo farmlab \
-#     && echo 'farmlab ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers 
 
 # Remove any user or group that conflicts with the desired UID/GID
 RUN if getent passwd $UID; then \
@@ -77,17 +72,6 @@ RUN sudo rosdep init \
 # Modify .bashrc
 COPY custom_bashrc /home/${USERNAME}/
 RUN cat /home/${USERNAME}/custom_bashrc >> /home/${USERNAME}/.bashrc
-# RUN echo "alias l='ls -1'" >> ~/.bashrc \
-#     && echo "alias ll='ls -lah'" >> ~/.bashrc \
-#     && echo "alias 'cd..'='cd ..'" >> ~/.bashrc \
-#     && echo "alias tmux='tmux -2'" >> ~/.bashrc \
-#     # make bash autocomplete write every suggestion in a separate line
-#     && echo "bind 'set completion-display-width 0'" >> ~/.bashrc \
-#     && echo "export LANG=en_US.UTF-8" >> ~/.bashrc \
-#     && echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
-    
-# Ensure .bashrc is sourced when a new shell session starts
-# RUN sudo echo 'source ~/.bashrc' >> ~/.bash_profile
 
 WORKDIR /home/${USERNAME}
 
